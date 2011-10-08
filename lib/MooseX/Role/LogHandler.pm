@@ -4,7 +4,7 @@ package MooseX::Role::LogHandler;
 
 
 BEGIN {
-  $MooseX::Role::LogHandler::VERSION = '0.002';
+  $MooseX::Role::LogHandler::VERSION = '0.003';
 }
 # ABSTRACT: Role for those who prefer LogHandler
 
@@ -42,9 +42,8 @@ MooseX::Log::LogHandler - A Logging Role for Moose based on Log::Handler
 
  package MyApp;
  use Moose;
- use Log::Handler;
 
- with 'MooseX::Log::LogHandler';
+ with 'MooseX::Role::LogHandler';
 
  sub foo {
    my ($self) = @_;
@@ -69,7 +68,7 @@ roles/systems like L<MooseX::Log::LogDispatch> this can be thought of as a commo
   package MyApp::View::JSON;
 
   extends 'MyApp::View';
-  with 'MooseX:Log::LogHandler';
+  with 'MooseX::Role::LogHandler';
 
   sub bar {
     $self->logger->debug("Something could be crappy here");	# logs a debug message
@@ -92,7 +91,7 @@ Or come bother us in C<#moose> on C<irc.perl.org>.
 
 NJ Walker<< <njwalker@cpan.org> >>
 
-Inspired by the work by Roland Lammel C<< <lammel@cpan.org> >> who was in turn inspired by Chris Prather C<< <perigrin@cpan.org> >> and Ash
+All (inc. documentation) based on the work by Roland Lammel C<< <lammel@cpan.org> >> who was in turn inspired by Chris Prather C<< <perigrin@cpan.org> >> and Ash
 Berlin C<< <ash@cpan.org> >> on L<MooseX::LogDispatch>
 
 =head1 CONTRIBUTORS
