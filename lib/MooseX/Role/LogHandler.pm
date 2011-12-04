@@ -4,7 +4,7 @@ package MooseX::Role::LogHandler;
 
 
 BEGIN {
-  $MooseX::Role::LogHandler::VERSION = '0.004';
+  $MooseX::Role::LogHandler::VERSION = '0.005';
 }
 # ABSTRACT: Role for those who prefer LogHandler
 
