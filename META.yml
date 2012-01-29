@@ -2,7 +2,11 @@
 abstract: 'Role for those who prefer LogHandler'
 author:
   - 'NJWalker <njwalker@gmail.com>'
-build_requires: {}
+build_requires:
+  File::Remove: 0
+  Moose: 0
+  Test::Spec: 0
+  autodie: 0
 configure_requires:
   ExtUtils::MakeMaker: 6.30
 dynamic_config: 0
@@ -14,8 +18,8 @@ meta-spec:
 name: MooseX-Role-LogHandler
 requires:
   Log::Handler: 0
-  Moose::Role: 0
+  MooseX::Role::Parameterized: 0
   namespace::autoclean: 0
   strict: 0
   warnings: 0
-version: 0.005
+version: 0.006

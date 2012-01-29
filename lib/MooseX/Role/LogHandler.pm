@@ -4,33 +4,42 @@ package MooseX::Role::LogHandler;
 
 
 BEGIN {
-  $MooseX::Role::LogHandler::VERSION = '0.005';
+  $MooseX::Role::LogHandler::VERSION = '0.006';
 }
 # ABSTRACT: Role for those who prefer LogHandler
 
-use Moose::Role;
+use MooseX::Role::Parameterized;
 use Log::Handler;
 use namespace::autoclean;
 
-has 'logger' => (
-	is      => 'rw',
-	isa     => 'Log::Handler',
-	lazy_build    => 1,
-);
+parameter 'filename' => ( isa => 'Str | Undef');
 
-sub _build_logger {
-    my $self   = shift;
-    my $logger = Log::Handler->new( 
-           file => {
-             filename => "/tmp/".__PACKAGE__.".log",
-             maxlevel => "debug",
-             minlevel => "warning",
-              message_layout => "%T [%L] [%p] line %l: %m",
-          }        
+role {
+    my $p = shift;
+    has 'logger' => (
+          is      => 'rw',
+          isa     => 'Log::Handler',
+          lazy_build    => 1,
     );
-    return $logger;
-};
+    has 'filename' => (
+        is => 'rw',
+        isa => 'Str | Undef',
+        default => sub {$p->filename}
+    );
 
+  sub _build_logger {
+      my $self   = shift;
+      my $logger = Log::Handler->new( 
+            file => {
+              filename => defined($self->filename) ? $self->filename : "/tmp/".__PACKAGE__.".log",
+              maxlevel => "debug",
+              minlevel => "warning",
+              message_layout => "%T [%L] [%p] line %l: %m",
+            }        
+      );
+    return $logger;
+  };
+};
 1;
 __END__
 

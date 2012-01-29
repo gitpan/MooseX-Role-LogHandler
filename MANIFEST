@@ -5,3 +5,5 @@ Makefile.PL
 README
 dist.ini
 lib/MooseX/Role/LogHandler.pm
+t/001_test_spec.t
+t/TestClass.pm

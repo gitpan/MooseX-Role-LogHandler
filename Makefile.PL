@@ -11,7 +11,12 @@ use ExtUtils::MakeMaker 6.30;
 my %WriteMakefileArgs = (
   "ABSTRACT" => "Role for those who prefer LogHandler",
   "AUTHOR" => "NJWalker <njwalker\@gmail.com>",
-  "BUILD_REQUIRES" => {},
+  "BUILD_REQUIRES" => {
+    "File::Remove" => 0,
+    "Moose" => 0,
+    "Test::Spec" => 0,
+    "autodie" => 0
+  },
   "CONFIGURE_REQUIRES" => {
     "ExtUtils::MakeMaker" => "6.30"
   },
@@ -21,14 +26,14 @@ my %WriteMakefileArgs = (
   "NAME" => "MooseX::Role::LogHandler",
   "PREREQ_PM" => {
     "Log::Handler" => 0,
-    "Moose::Role" => 0,
+    "MooseX::Role::Parameterized" => 0,
     "namespace::autoclean" => 0,
     "strict" => 0,
     "warnings" => 0
   },
-  "VERSION" => "0.005",
+  "VERSION" => "0.006",
   "test" => {
-    "TESTS" => ""
+    "TESTS" => "t/*.t"
   }
 );
 
