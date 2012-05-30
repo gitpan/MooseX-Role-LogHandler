@@ -2,7 +2,7 @@ use strict;
 use warnings;
 package TestClass;
 use Moose;
-with 'MooseX::Role::LogHandler' => { filename => 't/testlog'};
+with 'MooseX::Role::LogHandler' => { logfile => 't/testlog'};
 has test => ( isa => 'Str', is => 'rw');
 
 sub method_that_logs_1 {

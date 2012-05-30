@@ -4,7 +4,7 @@ package MooseX::Role::LogHandler;
 
 
 BEGIN {
-  $MooseX::Role::LogHandler::VERSION = '0.006';
+  $MooseX::Role::LogHandler::VERSION = '0.007';
 }
 # ABSTRACT: Role for those who prefer LogHandler
 
@@ -12,7 +12,7 @@ use MooseX::Role::Parameterized;
 use Log::Handler;
 use namespace::autoclean;
 
-parameter 'filename' => ( isa => 'Str | Undef');
+parameter 'logfile' => ( isa => 'Str | Undef');
 
 role {
     my $p = shift;
@@ -21,17 +21,17 @@ role {
           isa     => 'Log::Handler',
           lazy_build    => 1,
     );
-    has 'filename' => (
+    has 'logfile' => (
         is => 'rw',
         isa => 'Str | Undef',
-        default => sub {$p->filename}
+        default => sub {$p->logfile}
     );
 
   sub _build_logger {
       my $self   = shift;
       my $logger = Log::Handler->new( 
             file => {
-              filename => defined($self->filename) ? $self->filename : "/tmp/".__PACKAGE__.".log",
+              filename => defined($self->logfile) ? $self->logfile : "/tmp/".__PACKAGE__.".log",
               maxlevel => "debug",
               minlevel => "warning",
               message_layout => "%T [%L] [%p] line %l: %m",
