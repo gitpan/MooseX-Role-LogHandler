@@ -4,16 +4,16 @@ package MooseX::Role::LogHandler;
 
 
 BEGIN {
-  $MooseX::Role::LogHandler::VERSION = '0.007';
+  $MooseX::Role::LogHandler::VERSION = '0.008';
 }
 # ABSTRACT: Role for those who prefer LogHandler
 
 use MooseX::Role::Parameterized;
 use Log::Handler;
 use namespace::autoclean;
-
+ 
 parameter 'logfile' => ( isa => 'Str | Undef');
-
+parameter 'logconf' => ( isa => 'HashRef | Undef');
 role {
     my $p = shift;
     has 'logger' => (
@@ -26,10 +26,22 @@ role {
         isa => 'Str | Undef',
         default => sub {$p->logfile}
     );
-
+    has 'logconf' => (
+        is => 'rw',
+        isa => 'HashRef | Undef',
+        default => sub {$p->logconf}
+    );
+  
   sub _build_logger {
-      my $self   = shift;
-      my $logger = Log::Handler->new( 
+      my $self   = shift;      
+      my $logger;
+      
+      if( defined $self->logconf ) { 
+        $logger = Log::Handler->new( %{ $self->logconf } );
+        return $logger;      
+      }
+       
+      $logger = Log::Handler->new( 
             file => {
               filename => defined($self->logfile) ? $self->logfile : "/tmp/".__PACKAGE__.".log",
               maxlevel => "debug",
@@ -37,7 +49,7 @@ role {
               message_layout => "%T [%L] [%p] line %l: %m",
             }        
       );
-    return $logger;
+      return $logger;
   };
 };
 1;
@@ -52,6 +64,11 @@ MooseX::Role::LogHandler - A Logging Role for Moose based on Log::Handler
  package MyApp;
  use Moose;
 
+ # customise log file destination from /tmp/__PACKAGE__.log  
+ has logfile => ( isa => 'Str', is => 'ro', default => sub { '/tmp/my.log'} ); 
+ # or more full config
+ has logconf => ( isa => 'HashRef', is => 'ro', default => sub {{file => {filename => '/tmp/my.log', maxlevel => 'debug'}}});
+ 
  with 'MooseX::Role::LogHandler';
 
  sub foo {
@@ -75,13 +92,13 @@ defined log levels, such as C<debug> or C<error>. As this method is defined also
 roles/systems like L<MooseX::Log::LogDispatch> this can be thought of as a common logging interface.
 
   package MyApp::View::JSON;
-
   extends 'MyApp::View';
+  
   with 'MooseX::Role::LogHandler';
 
   sub bar {
-    $self->logger->debug("Something could be crappy here");	# logs a debug message
-    $self->logger->debug("Something could be crappy here");	# logs a debug message
+    $self->logger->debug("Something could be crappy here");	     # logs a debug message
+    $self->logger->debug("Something else could be crappy here"); # logs a debug message
   }
 
 =head1 SEE ALSO
@@ -98,19 +115,16 @@ Or come bother us in C<#moose> on C<irc.perl.org>.
 
 =head1 AUTHOR
 
-NJ Walker<< <njwalker@cpan.org> >>
+NJ Walker C<< <njwalker@cpan.org> >>
 
-All (inc. documentation) based on the work by Roland Lammel C<< <lammel@cpan.org> >> who was in turn inspired by Chris Prather C<< <perigrin@cpan.org> >> and Ash
+All (inc. most documentation) based on the work by Roland Lammel C<< <lammel@cpan.org> >> who was in turn inspired by Chris Prather C<< <perigrin@cpan.org> >> and Ash
 Berlin C<< <ash@cpan.org> >> on L<MooseX::LogDispatch>
 
 =head1 CONTRIBUTORS
 
 =head1 LICENCE AND COPYRIGHT
 
-Copyright (c) 2008-2010, NJ Walker C<< <njwalker@cpan.org> >>, Some rights reserved.
+Copyright (c) 2011-2013, NJ Walker C<< <njwalker@cpan.org> >>, Some rights reserved.
 
 This module is free software; you can redistribute it and/or
 modify it under the same terms as Perl itself. See L<perlartistic>.
-
-
-1;
